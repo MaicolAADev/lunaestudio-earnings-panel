@@ -6,9 +6,20 @@ declare global {
 }
 
 function createPool() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
+  const raw = process.env.DATABASE_URL;
+  if (!raw) {
     throw new Error("Missing env var DATABASE_URL");
+  }
+
+  let connectionString = raw.trim();
+  if (connectionString.startsWith("DATABASE_URL=")) {
+    connectionString = connectionString.slice("DATABASE_URL=".length).trim();
+  }
+  if (
+    (connectionString.startsWith('"') && connectionString.endsWith('"')) ||
+    (connectionString.startsWith("'") && connectionString.endsWith("'"))
+  ) {
+    connectionString = connectionString.slice(1, -1).trim();
   }
 
   const isPostgresUrl =
