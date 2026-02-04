@@ -22,6 +22,7 @@ function createPool() {
     );
   }
 
+  
   return new Pool({ connectionString });
 }
 
