@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getModelEarningsController } from "@/src/modules/earnings/earnings.controller";
 
+export const runtime = "nodejs";
+
 export async function GET(req: Request) {
   try {
     const result = await getModelEarningsController(req);

@@ -22,12 +22,23 @@ function createPool() {
     );
   }
 
-  
   return new Pool({ connectionString });
 }
 
-export const pool: Pool = globalThis.__pgPool ?? createPool();
+function getPool(): Pool {
+  if (globalThis.__pgPool) return globalThis.__pgPool;
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.__pgPool = pool;
+  const created = createPool();
+  if (process.env.NODE_ENV !== "production") {
+    globalThis.__pgPool = created;
+  }
+  return created;
 }
+
+export const pool: Pool = new Proxy({} as Pool, {
+  get(_target, prop) {
+    const real = getPool() as any;
+    const value = real[prop];
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});

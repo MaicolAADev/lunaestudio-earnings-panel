@@ -4,6 +4,8 @@ import {
   listModelEarningsController,
 } from "@/src/modules/model-earnings/model-earnings.controller";
 
+export const runtime = "nodejs";
+
 export async function GET(req: Request) {
   try {
     const result = await listModelEarningsController(req);
